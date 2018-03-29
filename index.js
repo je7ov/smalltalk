@@ -9,7 +9,7 @@ require('./models/User');
 require('./models/Room');
 // require('./services/passport');
 
-mongoose.connect(keys.mongoURI).catch(err => console.error(err.stack));
+mongoose.connect(keys.mongoURI);
 mongoose.Promise = global.Promise;
 
 const app = express();

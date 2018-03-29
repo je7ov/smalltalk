@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
 import * as actions from '../actions';
 
 class Login extends Component {
@@ -56,6 +57,7 @@ class Login extends Component {
 
   _renderError() {
     if (this.props.auth && this.props.auth.status !== 200) {
+      console.log(this.props.auth);
       return (
         <div
           className="alert alert-danger alert-dismissible fade show"
@@ -66,6 +68,22 @@ class Login extends Component {
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+      );
+    }
+  }
+
+  _renderSubmit() {
+    if (this.props.auth && this.props.auth.isLoading) {
+      return (
+        <button type="submit" className="btn btn-block btn-outline-primary">
+          <PulseLoader size={8} color={'#b5c8ff'} />
+        </button>
+      );
+    } else {
+      return (
+        <button type="submit" className="btn btn-block btn-outline-primary">
+          Submit
+        </button>
       );
     }
   }
@@ -115,10 +133,7 @@ class Login extends Component {
               </div>
             </div>
 
-            <input
-              type="submit"
-              className="btn btn-block btn-outline-primary"
-            />
+            {this._renderSubmit()}
 
             {this._renderError()}
           </form>

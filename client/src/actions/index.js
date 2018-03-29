@@ -11,12 +11,16 @@ export const fetchUser = () => async dispatch => {
 };
 
 export const login = (username, password) => async dispatch => {
+  dispatch(loading());
+  // dispatch(loginHelper(username, password));
   let res = {};
   try {
     res = await axios.post('/auth/login', { username, password });
     Auth.authenticateUser(res.data.token);
   } catch (error) {
-    res.data = error.response;
+    // res.data = error.response;
+    dispatch(authError(error.response));
+    return;
   }
 
   dispatch({ type: LOG_IN, payload: res.data });
@@ -51,4 +55,13 @@ export const logout = () => async dispatch => {
 
   Auth.deauthenticateUser();
   dispatch({ type: LOG_OUT, payload: null });
+};
+
+export const loading = () => dispatch => {
+  console.log('setting loading flag');
+  const loading = {
+    isLoading: true,
+    status: 200
+  };
+  dispatch({ type: FETCH_USER, payload: loading });
 };
