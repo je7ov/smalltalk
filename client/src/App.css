@@ -1,0 +1,17 @@
+#login,
+#signup {
+  margin-top: 36px;
+}
+
+form .alert {
+  margin-top: 12px;
+}
+
+#login-form,
+#signup-form {
+  margin-bottom: 12px;
+}
+
+#dashboard {
+  margin-top: 42px;
+}

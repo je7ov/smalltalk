@@ -1,0 +1,106 @@
+const passport = require('passport');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const keys = require('../config/keys');
+
+const User = mongoose.model('users');
+
+module.exports = app => {
+  // authenticate with google
+  app.get(
+    '/auth/google',
+    passport.authenticate('google', {
+      scope: ['profile', 'email']
+    })
+  );
+
+  // callback for google auth
+  app.get(
+    '/auth/google/callback',
+    passport.authenticate('google'),
+    (req, res) => {
+      res.redirect('/');
+    }
+  );
+
+  // sign up with username and password
+  app.post('/auth/signup', (req, res, next) => {
+    const { username, password } = req.body;
+    return passport.authenticate('local-signup', err => {
+      if (err) {
+        if (err.code === 11000) {
+          return res.status(409).json({
+            success: false,
+            message: 'Username is already taken.'
+          });
+        }
+
+        let message = '';
+        if (err.errors.password.kind === 'minlength') {
+          message = 'Password must be at least 6 characters.';
+        }
+        console.log('the error', err.errors.password.kind);
+        return res.status(400).json({
+          success: false,
+          message
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message:
+          'You have successfully signed up! Now you should be able to log in.'
+      });
+    })(req, res, next);
+  });
+
+  // login with username and password
+  app.post('/auth/login', async (req, res, next) => {
+    return passport.authenticate('local-login', (err, token, userData) => {
+      if (err) {
+        if (
+          err.name === 'IncorrectUsernameError' ||
+          err.name === 'IncorrectPasswordError'
+        ) {
+          console.log('wrong username or pass');
+          return res.status(400).send({
+            success: false,
+            message: err.message
+          });
+        }
+
+        // return res.status(400).send({
+        //   success: false,
+        //   message: 'Could not process the form.'
+        // });
+      }
+
+      return res.json({
+        success: true,
+        message: 'You have successfully logged in!',
+        token,
+        user: userData
+      });
+    })(req, res, next);
+  });
+
+  // get currently logged in user from passport
+  app.get('/api/current_user', async (req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, keys.jwtSecret);
+    const userId = decoded.sub;
+
+    const userData = await User.findById(userId);
+    const user = {
+      username: userData.username
+    };
+    res.send(user);
+  });
+
+  // logout user with passport
+  app.get('/api/logout', (req, res) => {
+    req.logout();
+
+    res.send();
+  });
+};
