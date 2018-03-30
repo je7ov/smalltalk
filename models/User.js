@@ -18,7 +18,7 @@ const userSchema = new Schema({
   roomsOwned: [{ roomId: ObjectId }]
 });
 
-userSchema.methods.validPassword = async function(password) {
+userSchema.methods.checkPassword = async function(password) {
   const res = await bcrypt.compare(password, this.password).catch(err => {
     console.log(err.stack);
     return false;

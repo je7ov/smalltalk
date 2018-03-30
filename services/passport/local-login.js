@@ -18,7 +18,7 @@ module.exports = new PassportLocalStrategy(async (username, password, done) => {
     return done(error);
   }
 
-  const valid = await user.validPassword(password.trim());
+  const valid = await user.checkPassword(password.trim());
   if (!valid) {
     const error = new Error('Incorrect password');
     error.name = 'IncorrectPasswordError';
