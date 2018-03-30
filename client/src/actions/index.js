@@ -12,7 +12,7 @@ export const fetchUser = () => async dispatch => {
 
 export const login = (username, password) => async dispatch => {
   dispatch(loading());
-  // dispatch(loginHelper(username, password));
+
   let res = {};
   try {
     res = await axios.post('/auth/login', { username, password });
@@ -27,16 +27,15 @@ export const login = (username, password) => async dispatch => {
 };
 
 export const signup = (username, password) => async dispatch => {
-  let res;
+  dispatch(loading());
 
   try {
-    res = await axios.post('/auth/signup', { username, password });
+    await axios.post('/auth/signup', { username, password });
   } catch (error) {
     dispatch(authError(error.response));
     return;
   }
 
-  console.log(res);
   dispatch(login(username, password));
 };
 
@@ -58,7 +57,6 @@ export const logout = () => async dispatch => {
 };
 
 export const loading = () => dispatch => {
-  console.log('setting loading flag');
   const loading = {
     isLoading: true,
     status: 200
