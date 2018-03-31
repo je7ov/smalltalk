@@ -15,7 +15,7 @@ const userSchema = new Schema({
     type: String,
     minlength: 6
   },
-  roomsOwned: [{ roomId: ObjectId }]
+  roomsOwned: [ObjectId]
 });
 
 userSchema.methods.checkPassword = async function(password) {

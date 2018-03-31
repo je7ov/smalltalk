@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Auth from '../modules/Auth';
-import { FETCH_USER, LOG_IN, LOG_OUT } from './types';
+import { FETCH_USER, LOG_IN, LOG_OUT, NEW_ROOM } from './types';
 
 export const fetchUser = () => async dispatch => {
   const res = await axios.get('/api/current_user', {
@@ -62,4 +62,21 @@ export const loading = () => dispatch => {
     status: 200
   };
   dispatch({ type: FETCH_USER, payload: loading });
+};
+
+export const createRoom = (name, userId) => async dispatch => {
+  const newRoom = await axios.post(
+    '/api/new_room',
+    {
+      name,
+      userId
+    },
+    { headers: { Authorization: `Bearer ${Auth.getToken()}` } }
+  );
+
+  console.log(newRoom);
+  if (newRoom.data.success) {
+    dispatch(fetchUser());
+  }
+  dispatch({ type: NEW_ROOM, payload: { success: newRoom.success } });
 };

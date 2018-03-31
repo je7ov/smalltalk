@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const keys = require('../config/keys');
 
 const User = mongoose.model('users');
+const Room = mongoose.model('rooms');
 
 module.exports = app => {
   // authenticate with google
@@ -36,14 +37,9 @@ module.exports = app => {
           });
         }
 
-        let message = '';
-        if (err.errors.password.kind === 'minlength') {
-          message = 'Password must be at least 6 characters.';
-        }
-        console.log('the error', err.errors.password.kind);
         return res.status(400).json({
           success: false,
-          message
+          message: ''
         });
       }
       return res.status(200).json({
@@ -62,7 +58,6 @@ module.exports = app => {
           err.name === 'IncorrectUsernameError' ||
           err.name === 'IncorrectPasswordError'
         ) {
-          console.log('wrong username or pass');
           return res.status(400).send({
             success: false,
             message: err.message
@@ -91,9 +86,23 @@ module.exports = app => {
     const userId = decoded.sub;
 
     const userData = await User.findById(userId);
-    const user = {
-      username: userData.username
-    };
+
+    let user = null;
+    if (userData) {
+      const roomsOwned = [];
+      for (const roomId of userData.roomsOwned) {
+        const roomName = await Room.findById(roomId);
+        console.log(roomName.name);
+        roomsOwned.push(roomName.name);
+      }
+
+      user = {
+        id: userData.id,
+        username: userData.username,
+        roomsOwned
+      };
+    }
+
     res.send(user);
   });
 

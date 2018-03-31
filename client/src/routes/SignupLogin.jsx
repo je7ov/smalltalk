@@ -139,7 +139,7 @@ class SignupLogin extends Component {
     return (
       <div className="row" id="signup-form">
         <div className="col-sm-12">
-          <form id="signup" onSubmit={this._handleSignupSubmit}>
+          <form id="signup">
             <h2 className="text-center">
               {this.state.login ? 'Log in' : 'Sign up'}
             </h2>

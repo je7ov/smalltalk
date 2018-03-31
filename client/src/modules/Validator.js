@@ -3,7 +3,7 @@ const usernameConfig = {
   max: 16
 };
 const passwordConfig = {
-  min: 4,
+  min: 6,
   max: 24
 };
 
