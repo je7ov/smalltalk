@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Auth from '../modules/Auth';
-import { FETCH_USER, LOG_IN, LOG_OUT, NEW_ROOM } from './types';
+import { FETCH_USER, LOG_IN, LOG_OUT, NEW_ROOM, DELETE_ROOM } from './types';
 
 export const fetchUser = () => async dispatch => {
   const res = await axios.get('/api/current_user', {
@@ -64,19 +64,28 @@ export const loading = () => dispatch => {
   dispatch({ type: FETCH_USER, payload: loading });
 };
 
-export const createRoom = (name, userId) => async dispatch => {
+export const createRoom = name => async dispatch => {
   const newRoom = await axios.post(
     '/api/new_room',
-    {
-      name,
-      userId
-    },
+    { name },
     { headers: { Authorization: `Bearer ${Auth.getToken()}` } }
   );
 
-  console.log(newRoom);
   if (newRoom.data.success) {
     dispatch(fetchUser());
   }
   dispatch({ type: NEW_ROOM, payload: { success: newRoom.success } });
+};
+
+export const deleteRoom = name => async dispatch => {
+  const deleteRoom = await axios.post(
+    'api/delete_room',
+    { name },
+    { headers: { Authorization: `Bearer ${Auth.getToken()}` } }
+  );
+
+  if (deleteRoom.data.success) {
+    dispatch(fetchUser());
+  }
+  dispatch({ type: DELETE_ROOM, payload: { success: deleteRoom.success } });
 };

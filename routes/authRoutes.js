@@ -92,8 +92,9 @@ module.exports = app => {
       const roomsOwned = [];
       for (const roomId of userData.roomsOwned) {
         const roomName = await Room.findById(roomId);
-        console.log(roomName.name);
-        roomsOwned.push(roomName.name);
+        if (roomName) {
+          roomsOwned.push(roomName.name);
+        }
       }
 
       user = {

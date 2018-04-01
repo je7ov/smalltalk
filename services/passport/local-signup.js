@@ -12,7 +12,6 @@ const passwordConfig = {
 
 module.exports = new PassportLocalStrategy(async (username, password, done) => {
   username = username.trim();
-  password = password.trim();
 
   const validUsernameError = validateUsername(username);
   if (validUsernameError) {
@@ -26,6 +25,7 @@ module.exports = new PassportLocalStrategy(async (username, password, done) => {
 
   const user = await new User({
     username,
+    usernameLower: username.toLowerCase(),
     password
   })
     .save()

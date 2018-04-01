@@ -14,6 +14,7 @@ class Dashboard extends Component {
     this._handleLogout = this._handleLogout.bind(this);
     this._handleRoomNameChange = this._handleRoomNameChange.bind(this);
     this._handleCreateRoom = this._handleCreateRoom.bind(this);
+    this._handleDeleteRoom = this._handleDeleteRoom.bind(this);
     this._renderRoomList = this._renderRoomList.bind(this);
   }
 
@@ -25,6 +26,33 @@ class Dashboard extends Component {
     await this.props.logout();
 
     this.props.history.replace('/');
+  }
+
+  _handleCreateRoom(event) {
+    event.preventDefault();
+
+    if (this.props.auth) {
+      this.props.createRoom(this.state.roomName, this.props.auth.id);
+      this.setState({ roomName: '' });
+    }
+  }
+
+  _handleRoomNameChange(event) {
+    this.setState({ roomName: event.target.value });
+  }
+
+  _handleDeleteRoom(event) {
+    event.preventDefault();
+
+    // add better confirmation
+    if (
+      window.confirm(
+        `Are you sure you want to delete room '${event.target.id}'?`
+      )
+    ) {
+      // delete room here
+      this.props.deleteRoom(event.target.id);
+    }
   }
 
   _renderSampleText() {
@@ -54,7 +82,18 @@ class Dashboard extends Component {
           <h5>Rooms:</h5>
           <ul className="list-group">
             {this.props.auth.roomsOwned.map(room => {
-              return <li className="list-group-item">{room}</li>;
+              return (
+                <li className="list-group-item" key={room}>
+                  {room}
+                  <button
+                    className="close"
+                    id={room}
+                    onClick={this._handleDeleteRoom}
+                  >
+                    &times;
+                  </button>
+                </li>
+              );
             })}
           </ul>
         </div>
@@ -62,20 +101,7 @@ class Dashboard extends Component {
     }
   }
 
-  _handleCreateRoom(event) {
-    event.preventDefault();
-
-    if (this.props.auth) {
-      this.props.createRoom(this.state.roomName, this.props.auth.id);
-    }
-  }
-
-  _handleRoomNameChange(event) {
-    this.setState({ roomName: event.target.value });
-  }
-
   render() {
-    console.log(this.props.auth);
     return (
       <div className="container" id="dashboard">
         <div className="row">

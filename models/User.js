@@ -9,6 +9,11 @@ const userSchema = new Schema({
     type: String,
     trim: true,
     minlength: 4,
+    maxlength: 16,
+    unique: true
+  },
+  usernameLower: {
+    type: String,
     unique: true
   },
   password: {
