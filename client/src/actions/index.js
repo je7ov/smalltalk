@@ -1,6 +1,13 @@
 import axios from 'axios';
 import Auth from '../modules/Auth';
-import { FETCH_USER, LOG_IN, LOG_OUT, NEW_ROOM, DELETE_ROOM } from './types';
+import {
+  FETCH_USER,
+  LOG_IN,
+  LOG_OUT,
+  LOADING,
+  NEW_ROOM,
+  DELETE_ROOM
+} from './types';
 
 export const fetchUser = () => async dispatch => {
   const res = await axios.get('/api/current_user', {
@@ -24,6 +31,7 @@ export const login = (username, password) => async dispatch => {
   }
 
   dispatch({ type: LOG_IN, payload: res.data });
+  dispatch(doneLoading());
 };
 
 export const signup = (username, password) => async dispatch => {
@@ -57,14 +65,16 @@ export const logout = () => async dispatch => {
 };
 
 export const loading = () => dispatch => {
-  const loading = {
-    isLoading: true,
-    status: 200
-  };
-  dispatch({ type: FETCH_USER, payload: loading });
+  dispatch({ type: LOADING, payload: { isLoading: true } });
+};
+
+export const doneLoading = () => dispatch => {
+  dispatch({ type: LOADING, payload: { isLoading: false } });
 };
 
 export const createRoom = name => async dispatch => {
+  dispatch(loading());
+
   const newRoom = await axios.post(
     '/api/new_room',
     { name },
@@ -75,6 +85,7 @@ export const createRoom = name => async dispatch => {
     dispatch(fetchUser());
   }
   dispatch({ type: NEW_ROOM, payload: { success: newRoom.success } });
+  dispatch(doneLoading());
 };
 
 export const deleteRoom = name => async dispatch => {

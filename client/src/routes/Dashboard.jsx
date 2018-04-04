@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { PulseLoader } from 'react-spinners';
 
 import * as actions from '../actions';
 
@@ -16,6 +17,7 @@ class Dashboard extends Component {
     this._handleCreateRoom = this._handleCreateRoom.bind(this);
     this._handleDeleteRoom = this._handleDeleteRoom.bind(this);
     this._renderRoomList = this._renderRoomList.bind(this);
+    this._renderCreateButton = this._renderCreateButton.bind(this);
   }
 
   componentWillMount() {
@@ -101,6 +103,25 @@ class Dashboard extends Component {
     }
   }
 
+  _renderCreateButton() {
+    if (this.props.load && this.props.load.isLoading) {
+      return (
+        <button className="btn btn-success btn-block" disabled>
+          <PulseLoader size={8} color={'#b5c8ff'} />
+        </button>
+      );
+    } else {
+      return (
+        <button
+          className="btn btn-success btn-block"
+          onClick={this._handleCreateRoom}
+        >
+          Create Room
+        </button>
+      );
+    }
+  }
+
   render() {
     return (
       <div className="container" id="dashboard">
@@ -136,12 +157,7 @@ class Dashboard extends Component {
                   onChange={this._handleRoomNameChange}
                 />
               </div>
-              <button
-                className="btn btn-success btn-block"
-                onClick={this._handleCreateRoom}
-              >
-                Create Room
-              </button>
+              {this._renderCreateButton()}
             </form>
           </div>
         </div>
@@ -154,8 +170,8 @@ class Dashboard extends Component {
   }
 }
 
-function mapStateToProps({ auth, room }) {
-  return { auth, room };
+function mapStateToProps({ auth, room, load }) {
+  return { auth, room, load };
 }
 
 export default connect(mapStateToProps, actions)(Dashboard);

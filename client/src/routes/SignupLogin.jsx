@@ -112,7 +112,7 @@ class SignupLogin extends Component {
   }
 
   _renderSubmit() {
-    if (this.props.auth && this.props.auth.isLoading) {
+    if (this.props.load && this.props.load.isLoading) {
       return (
         <button
           type="submit"
@@ -239,8 +239,8 @@ class SignupLogin extends Component {
   }
 }
 
-function mapStateToProps({ auth }) {
-  return { auth };
+function mapStateToProps({ auth, load }) {
+  return { auth, load };
 }
 
 export default connect(mapStateToProps, actions)(SignupLogin);

@@ -130,7 +130,7 @@ async function validRoomName(name) {
       success: false,
       message: 'Room name is empty'
     };
-  } else if (!name.match(/^[0-9a-zA-Z ]+$/)) {
+  } else if (!name.match(/^[0-9a-zA-Z '.?!-]+$/)) {
     return {
       success: false,
       message: 'Room name must be alphanumeric'
