@@ -1,10 +1,12 @@
 import axios from 'axios';
 import Auth from '../modules/Auth';
 import {
+  AUTH,
   FETCH_USER,
   LOG_IN,
   LOG_OUT,
   LOADING,
+  ROOM,
   NEW_ROOM,
   DELETE_ROOM
 } from './types';
@@ -18,7 +20,7 @@ export const fetchUser = () => async dispatch => {
 };
 
 export const login = (username, password) => async dispatch => {
-  dispatch(loading());
+  dispatch(loading(AUTH));
 
   let res = {};
   try {
@@ -31,11 +33,11 @@ export const login = (username, password) => async dispatch => {
   }
 
   dispatch({ type: LOG_IN, payload: res.data });
-  dispatch(doneLoading());
+  dispatch(doneLoading(AUTH));
 };
 
 export const signup = (username, password) => async dispatch => {
-  dispatch(loading());
+  dispatch(loading(AUTH));
 
   try {
     await axios.post('/auth/signup', { username, password });
@@ -52,29 +54,30 @@ export const authError = error => dispatch => {
 };
 
 export const clearAuth = () => dispatch => {
-  dispatch({ type: FETCH_USER, payload: null });
+  dispatch({ type: FETCH_USER, payload: {} });
 };
 
 export const logout = () => async dispatch => {
+  dispatch(loading(AUTH));
   await axios.get('/api/logout', {
     headers: { Authorization: `Bearer ${Auth.getToken()}` }
   });
 
   Auth.deauthenticateUser();
   dispatch({ type: LOG_OUT, payload: null });
+  dispatch(doneLoading(AUTH));
 };
 
-export const loading = () => dispatch => {
-  dispatch({ type: LOADING, payload: { isLoading: true } });
+export const loading = target => dispatch => {
+  dispatch({ type: LOADING, payload: { target, isLoading: true } });
 };
 
-export const doneLoading = () => dispatch => {
-  dispatch({ type: LOADING, payload: { isLoading: false } });
+export const doneLoading = target => dispatch => {
+  dispatch({ type: LOADING, payload: { target, isLoading: false } });
 };
 
 export const createRoom = name => async dispatch => {
-  dispatch(loading());
-
+  dispatch(loading(ROOM));
   const newRoom = await axios.post(
     '/api/new_room',
     { name },
@@ -82,13 +85,14 @@ export const createRoom = name => async dispatch => {
   );
 
   if (newRoom.data.success) {
-    dispatch(fetchUser());
+    await dispatch(fetchUser());
   }
   dispatch({ type: NEW_ROOM, payload: { success: newRoom.success } });
-  dispatch(doneLoading());
+  dispatch(doneLoading(ROOM));
 };
 
 export const deleteRoom = name => async dispatch => {
+  dispatch(loading(ROOM));
   const deleteRoom = await axios.post(
     'api/delete_room',
     { name },
@@ -96,7 +100,8 @@ export const deleteRoom = name => async dispatch => {
   );
 
   if (deleteRoom.data.success) {
-    dispatch(fetchUser());
+    await dispatch(fetchUser());
   }
   dispatch({ type: DELETE_ROOM, payload: { success: deleteRoom.success } });
+  dispatch(doneLoading(ROOM));
 };

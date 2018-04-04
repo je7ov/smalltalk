@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { PulseLoader } from 'react-spinners';
 
+import SpinnerButton from '../components/SpinnerButton';
 import * as actions from '../actions';
 import Validator from '../modules/Validator';
 
@@ -96,7 +97,11 @@ class SignupLogin extends Component {
   }
 
   _renderError() {
-    if (this.props.auth && this.props.auth.status !== 200) {
+    if (
+      this.props.auth &&
+      this.props.auth.data &&
+      this.props.auth.status !== 200
+    ) {
       return (
         <div
           className="alert alert-danger alert-dismissible fade show"
@@ -112,27 +117,16 @@ class SignupLogin extends Component {
   }
 
   _renderSubmit() {
-    if (this.props.load && this.props.load.isLoading) {
-      return (
-        <button
-          type="submit"
-          className="btn btn-block btn-outline-primary"
-          disabled
-        >
-          <PulseLoader size={8} color={'#b5c8ff'} />
-        </button>
-      );
-    } else {
-      return (
-        <button
-          type="submit"
-          className="btn btn-block btn-outline-primary"
-          onClick={this._handleSubmit}
-        >
-          Submit
-        </button>
-      );
-    }
+    return (
+      <SpinnerButton
+        loading={this.props.auth && this.props.auth.isLoading}
+        block
+        blueOutline
+        onClick={this._handleSubmit}
+      >
+        Submit
+      </SpinnerButton>
+    );
   }
 
   _renderInputs() {

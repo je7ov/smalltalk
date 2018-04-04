@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { PulseLoader } from 'react-spinners';
 
+import SpinnerButton from '../components/SpinnerButton';
 import * as actions from '../actions';
 
 class Dashboard extends Component {
@@ -33,10 +33,8 @@ class Dashboard extends Component {
   _handleCreateRoom(event) {
     event.preventDefault();
 
-    if (this.props.auth) {
-      this.props.createRoom(this.state.roomName, this.props.auth.id);
-      this.setState({ roomName: '' });
-    }
+    this.props.createRoom(this.state.roomName);
+    this.setState({ roomName: '' });
   }
 
   _handleRoomNameChange(event) {
@@ -54,6 +52,7 @@ class Dashboard extends Component {
     ) {
       // delete room here
       this.props.deleteRoom(event.target.id);
+      this.forceUpdate();
     }
   }
 
@@ -104,22 +103,17 @@ class Dashboard extends Component {
   }
 
   _renderCreateButton() {
-    if (this.props.load && this.props.load.isLoading) {
-      return (
-        <button className="btn btn-success btn-block" disabled>
-          <PulseLoader size={8} color={'#b5c8ff'} />
-        </button>
-      );
-    } else {
-      return (
-        <button
-          className="btn btn-success btn-block"
-          onClick={this._handleCreateRoom}
-        >
-          Create Room
-        </button>
-      );
-    }
+    return (
+      <SpinnerButton
+        loading={this.props.room && this.props.room.isLoading}
+        spinnerColor="b5c8ff"
+        block
+        green
+        onClick={this._handleCreateRoom}
+      >
+        Create Room
+      </SpinnerButton>
+    );
   }
 
   render() {
@@ -129,13 +123,15 @@ class Dashboard extends Component {
           <div className="col-sm-4 offset-sm-4">
             <h1 className="text-center">Dashboard</h1>
             {this._renderSampleText()}
-            <button
-              className="btn btn-primary btn-block"
+            <SpinnerButton
+              loading={this.props.auth && this.props.auth.isLoading}
+              block
+              blue
+              spinnerColor="b5c8ff"
               onClick={this._handleLogout}
-              disabled={this.props.auth ? false : true}
             >
               Log out
-            </button>
+            </SpinnerButton>
           </div>
         </div>
         <br />
