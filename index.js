@@ -3,6 +3,8 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
+const http = require('http');
+const socketIO = require('socket.io');
 
 const keys = require('./config/keys');
 require('./models/User');
