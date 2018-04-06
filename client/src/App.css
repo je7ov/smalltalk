@@ -15,3 +15,7 @@ form .alert {
 #dashboard {
   margin-top: 42px;
 }
+
+li {
+  list-style-type: none;
+}

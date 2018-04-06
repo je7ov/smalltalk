@@ -6,6 +6,9 @@ const User = mongoose.model('users');
 const Room = mongoose.model('rooms');
 
 module.exports = app => {
+  /////////////////////
+  // CREATE NEW ROOM //
+  /////////////////////
   app.post('/api/new_room', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, keys.jwtSecret);
@@ -66,15 +69,25 @@ module.exports = app => {
     }
   });
 
+  ///////////////////
+  // DELETE A ROOM //
+  ///////////////////
   app.post('/api/delete_room', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, keys.jwtSecret);
     const userId = decoded.sub;
 
-    let { name } = req.body;
-    name = name.trim();
+    let { id } = req.body;
+    // name = name.trim();
 
-    const room = await Room.findOne({ nameLower: name.toLowerCase() });
+    const room = await Room.findById(id);
+    // const room = await Room.findOne({ nameLower: name.toLowerCase() });
+    if (!room) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Room not found' })
+        .send();
+    }
 
     const userData = room.userList.find(user => (user.userid = userId));
     if (!userData) {

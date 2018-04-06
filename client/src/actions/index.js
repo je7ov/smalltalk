@@ -91,11 +91,11 @@ export const createRoom = name => async dispatch => {
   dispatch(doneLoading(ROOM));
 };
 
-export const deleteRoom = name => async dispatch => {
+export const deleteRoom = id => async dispatch => {
   dispatch(loading(ROOM));
   const deleteRoom = await axios.post(
     'api/delete_room',
-    { name },
+    { id },
     { headers: { Authorization: `Bearer ${Auth.getToken()}` } }
   );
 

@@ -8,6 +8,7 @@ import Auth from './modules/Auth';
 
 import SignupLogin from './routes/SignupLogin';
 import Dashboard from './routes/Dashboard';
+import ChatRoom from './routes/ChatRoom';
 
 class App extends Component {
   render() {
@@ -26,6 +27,7 @@ class App extends Component {
           }}
         />
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/room/:name" component={ChatRoom} />
       </div>
     );
   }

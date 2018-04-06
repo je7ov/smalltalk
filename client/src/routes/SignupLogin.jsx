@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { PulseLoader } from 'react-spinners';
 
 import SpinnerButton from '../components/SpinnerButton';
 import * as actions from '../actions';

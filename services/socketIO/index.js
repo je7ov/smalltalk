@@ -6,15 +6,19 @@ module.exports = app => {
   const io = socketIO(server);
   app.io = io;
 
-  socket.on('join', (params, callback) => {
-    console.log('User joined:', socket.id);
+  io.on('connection', socket => {
+    console.log('User connect:', socket.id);
 
-    callback();
+    socket.on('join', (params, callback) => {
+      console.log('User joined:', socket.id);
+
+      callback();
+    });
+    socket.on('disconnect', () => {
+      console.log('User left:', socket.id);
+    });
   });
 };
-socket.on('disconnect', () => {
-  console.log('User left:', socket.id);
-});
 
 function isValidString(str) {
   return typeof str === 'string' && str.trim().length > 0;

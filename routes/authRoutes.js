@@ -25,7 +25,9 @@ module.exports = app => {
     }
   );
 
-  // sign up with username and password
+  ////////////////////////////////////////
+  // SIGN UP WITH USERNAME AND PASSWORD //
+  ////////////////////////////////////////
   app.post('/auth/signup', (req, res, next) => {
     const { username, password } = req.body;
     return passport.authenticate('local-signup', err => {
@@ -50,7 +52,9 @@ module.exports = app => {
     })(req, res, next);
   });
 
-  // login with username and password
+  //////////////////////////////////////
+  // LOGIN WITH USERNAME AND PASSWORD //
+  //////////////////////////////////////
   app.post('/auth/login', async (req, res, next) => {
     return passport.authenticate('local-login', (err, token, userData) => {
       if (err) {
@@ -79,7 +83,9 @@ module.exports = app => {
     })(req, res, next);
   });
 
-  // get currently logged in user from passport
+  ///////////////////////////////
+  // GET CURRENT USER FROM JWT //
+  ///////////////////////////////
   app.get('/api/current_user', async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, keys.jwtSecret);
@@ -91,9 +97,9 @@ module.exports = app => {
     if (userData) {
       const roomsOwned = [];
       for (const roomId of userData.roomsOwned) {
-        const roomName = await Room.findById(roomId);
-        if (roomName) {
-          roomsOwned.push(roomName.name);
+        const room = await Room.findById(roomId);
+        if (room) {
+          roomsOwned.push({ name: room.name, id: roomId });
         }
       }
 

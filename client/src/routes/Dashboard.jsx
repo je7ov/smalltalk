@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import SpinnerButton from '../components/SpinnerButton';
 import * as actions from '../actions';
@@ -41,17 +42,15 @@ class Dashboard extends Component {
     this.setState({ roomName: event.target.value });
   }
 
-  _handleDeleteRoom(event) {
+  _handleDeleteRoom(event, room) {
     event.preventDefault();
 
     // add better confirmation
     if (
-      window.confirm(
-        `Are you sure you want to delete room '${event.target.id}'?`
-      )
+      window.confirm(`Are you sure you want to delete room '${room.name}'?`)
     ) {
       // delete room here
-      this.props.deleteRoom(event.target.id);
+      this.props.deleteRoom(room.id);
       this.forceUpdate();
     }
   }
@@ -84,16 +83,24 @@ class Dashboard extends Component {
           <ul className="list-group">
             {this.props.auth.roomsOwned.map(room => {
               return (
-                <li className="list-group-item" key={room}>
-                  {room}
-                  <button
-                    className="close"
-                    id={room}
-                    onClick={this._handleDeleteRoom}
-                  >
-                    &times;
-                  </button>
-                </li>
+                <Link
+                  to={{
+                    pathname: `/room/${room.name.replace(/ /g, '+')}`,
+                    state: { room }
+                  }}
+                  className="list-group-item"
+                  key={room.name}
+                >
+                  <li>
+                    {room.name}
+                    <button
+                      className="close"
+                      onClick={event => this._handleDeleteRoom(event, room)}
+                    >
+                      &times;
+                    </button>
+                  </li>
+                </Link>
               );
             })}
           </ul>
