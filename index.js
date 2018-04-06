@@ -13,7 +13,7 @@ mongoose.connect(keys.mongoURI);
 mongoose.Promise = global.Promise;
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000 || process.env.PORT;
 
 app.use(bodyParser.json());
 app.use(
@@ -48,4 +48,5 @@ if (process.env.NODE_ENV === 'production') {
 
 app.listen(PORT, () => {
   console.log(`listening to port ${PORT}`);
+  console.log('ENV:', process.env.NODE_ENV);
 });
