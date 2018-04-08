@@ -36,8 +36,8 @@ class ChatRoom extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.state.socket && nextProps.auth && nextProps.auth.id) {
-      const socket = io(window.location.origin);
-      // const socket = io('http://localhost:5000');
+      // const socket = io(window.location.origin);
+      const socket = io('http://localhost:5000');
 
       /////////////////////
       // SOCKET.IO SETUP //

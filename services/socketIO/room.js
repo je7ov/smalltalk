@@ -10,9 +10,11 @@ class Rooms {
   addUser(id, name, room) {
     let user;
     this.rooms.some(r => {
-      user = { id, name };
-      r.users.push(user);
-      return true;
+      if (r.name.toLowerCase() === room) {
+        user = { id, name };
+        r.users.push(user);
+        return true;
+      }
     });
 
     if (!user) {
