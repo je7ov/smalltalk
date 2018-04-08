@@ -86,13 +86,10 @@ io.on('connection', socket => {
 
   socket.on('createMessage', async (message, roomId, callback) => {
     const user = rooms.getUser(socket.id);
-    console.log(roomId);
     const roomData = await Room.findById(roomId);
 
     if (roomData) {
       const timestamp = moment().valueOf();
-
-      console.log(timestamp);
 
       roomData.messages.push({
         from: user.name,

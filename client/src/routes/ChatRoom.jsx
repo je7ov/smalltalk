@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
+import { ClipLoader } from 'react-spinners';
 import * as actions from '../actions';
 import Message from '../components/Message';
 
@@ -17,7 +18,8 @@ class ChatRoom extends Component {
       input: '',
       socket: null,
       messages: [],
-      stickyScroll: false
+      stickyScroll: false,
+      firstLoad: true
     };
 
     this.messageListRef = React.createRef();
@@ -41,8 +43,6 @@ class ChatRoom extends Component {
       // SOCKET.IO SETUP //
       /////////////////////
       socket.on('connect', () => {
-        console.log('connected to server');
-
         socket.emit(
           'join',
           nextProps.auth.username,
@@ -56,21 +56,17 @@ class ChatRoom extends Component {
         );
       });
 
-      socket.on('disconnect', () => {
-        console.log('disconnected from server');
-      });
-
       socket.on('newMessage', message => {
         const messages = this.state.messages.slice();
         messages.push(message);
-        this.setState({ messages: messages });
+        this.setState({ messages });
       });
 
       this.setState({ socket });
     }
 
     if (nextProps.room && nextProps.room.messages) {
-      this.setState({ messages: nextProps.room.messages });
+      this.setState({ messages: nextProps.room.messages, firstLoad: true });
     }
   }
 
@@ -93,12 +89,20 @@ class ChatRoom extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.stickyScroll) {
+    if (this.state.stickyScroll || this.state.firstLoad) {
       const node = this.messageListRef.current;
 
       node.scrollTop = node.scrollHeight - node.clientHeight;
-      this.setState({ stickyScroll: false });
+      if (this.state.firstLoad) {
+        this.setState({ stickyScroll: false, firstLoad: false });
+      } else {
+        this.setState({ stickyScroll: false });
+      }
     }
+  }
+
+  componentWillUnmount() {
+    this.state.socket.disconnect();
   }
 
   _handleBack(event) {
@@ -123,8 +127,8 @@ class ChatRoom extends Component {
   }
 
   _renderMessages() {
-    if (this.props.room && this.props.room.messages) {
-      if (this.props.room.messages.length !== 0) {
+    if (this.props.room && !this.props.room.isLoading) {
+      if (this.state.messages.length !== 0) {
         return (
           <ul className="list-group">
             {this.state.messages.map((message, i) => {
@@ -150,75 +154,25 @@ class ChatRoom extends Component {
     } else {
       return (
         <div className="centered">
-          <h2>Loading messages...</h2>
+          <ClipLoader />
         </div>
       );
     }
   }
 
-  _renderOld() {
+  render() {
     return (
-      <div className="container-fluid">
-        <br />
-        <br />
-        <div className="row">
-          <div className="col-sm-12">
-            <h2 className="text-center">
-              This is the room "{this.state.room.name}"!
-            </h2>
-            <p className="text-center">room id: {this.state.room.id}</p>
-            <h5 className="text-center warning">
-              The chat rooms are still under construction
-            </h5>
-            <br />
-            <br />
-          </div>
-          <div className="col-sm-12">
+      <div className="chat-page">
+        <div className="row chat-top">
+          <div className="col-2">
             <button className="btn btn-primary" onClick={this._handleBack}>
               &lt; Back
             </button>
           </div>
-        </div>
-        <br />
-        <br />
-        <div className="row">
-          <div className="col-sm-12">{this._renderMessages()}</div>
-        </div>
-        <br />
-        <br />
-        <div className="row">
-          <div className="col-12">
-            <form>
-              <div className="form-group row" id="message-input">
-                <div className="col-lg-10 col-md-9 col-8">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={this.state.input}
-                    onChange={this._handleInputChange}
-                  />
-                </div>
-                <div className="col-lg-2 col-md-3 col-4">
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-block"
-                    onClick={this._handleSendMessage}
-                  >
-                    SEND
-                  </button>
-                </div>
-              </div>
-            </form>
+          <div className="col-8">
+            <h1 className="text-center">{this.state.room.name}</h1>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  _renderNew() {
-    if (this.props.room) console.log(this.props.room.messages);
-    return (
-      <div className="chat-page">
         <div className="chat-messages" ref={this.messageListRef}>
           {this._renderMessages()}
         </div>
@@ -247,10 +201,6 @@ class ChatRoom extends Component {
         </div>
       </div>
     );
-  }
-
-  render() {
-    return this._renderNew();
   }
 }
 

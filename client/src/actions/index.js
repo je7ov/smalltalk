@@ -108,9 +108,11 @@ export const deleteRoom = id => async dispatch => {
 };
 
 export const getMessages = id => async dispatch => {
+  dispatch(loading(ROOM));
   const messages = await axios.get(`/api/messages/${id}`, {
     headers: { Authorization: `Bearer ${Auth.getToken()}` }
   });
 
   dispatch({ type: GET_MESSAGES, payload: messages.data });
+  dispatch(doneLoading(ROOM));
 };

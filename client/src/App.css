@@ -34,6 +34,10 @@ li {
   align-items: center;
 }
 
+.chat-top {
+  margin: 18px 12px;
+}
+
 .chat-page {
   width: 100vw;
   height: 100vh;
@@ -47,6 +51,8 @@ li {
   height: 100%;
   flex-grow: 1;
   overflow-y: auto;
+  margin-bottom: 12px;
+  padding: 12px;
 }
 
 .chat-input-form {
@@ -65,7 +71,7 @@ li {
 }
 
 .message hr {
-  margin: 0;
+  margin: 8px 0;
 }
 
 .message-from {
