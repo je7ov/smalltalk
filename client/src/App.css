@@ -19,3 +19,64 @@ form .alert {
 li {
   list-style-type: none;
 }
+
+.warning {
+  background: red;
+  color: white;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.centered {
+  height: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-page {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  width: inherit;
+  height: 100%;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.chat-input-form {
+  width: inherit;
+  flex-basis: 80px;
+  padding: 0 12px;
+}
+
+.message {
+  padding: 0 12px 0;
+}
+
+.message p {
+  padding: 0;
+  margin: 0;
+}
+
+.message hr {
+  margin: 0;
+}
+
+.message-from {
+  font-size: 1.2em;
+}
+
+.message-text {
+  font-size: 0.9em;
+}
+
+.message-time {
+  margin-left: 12px;
+  font-size: 0.65em;
+}

@@ -126,6 +126,21 @@ module.exports = app => {
       res.json({ success: true, message: 'Room successfully deleted' });
     });
   });
+
+  app.get('/api/messages/:id', async (req, res) => {
+    const { id } = req.params;
+
+    const room = await Room.findById(id);
+    if (!room) {
+      res
+        .status(400)
+        .json({ success: false, message: 'Room not found' })
+        .send();
+    }
+
+    // TODO: Limit number of messages sent back for initial load
+    res.send(room.messages);
+  });
 };
 
 async function validRoomName(name) {

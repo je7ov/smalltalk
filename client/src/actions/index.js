@@ -8,7 +8,8 @@ import {
   LOADING,
   ROOM,
   NEW_ROOM,
-  DELETE_ROOM
+  DELETE_ROOM,
+  GET_MESSAGES
 } from './types';
 
 export const fetchUser = () => async dispatch => {
@@ -94,7 +95,7 @@ export const createRoom = name => async dispatch => {
 export const deleteRoom = id => async dispatch => {
   dispatch(loading(ROOM));
   const deleteRoom = await axios.post(
-    'api/delete_room',
+    '/api/delete_room',
     { id },
     { headers: { Authorization: `Bearer ${Auth.getToken()}` } }
   );
@@ -104,4 +105,12 @@ export const deleteRoom = id => async dispatch => {
   }
   dispatch({ type: DELETE_ROOM, payload: { success: deleteRoom.success } });
   dispatch(doneLoading(ROOM));
+};
+
+export const getMessages = id => async dispatch => {
+  const messages = await axios.get(`/api/messages/${id}`, {
+    headers: { Authorization: `Bearer ${Auth.getToken()}` }
+  });
+
+  dispatch({ type: GET_MESSAGES, payload: messages.data });
 };

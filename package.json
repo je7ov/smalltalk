@@ -8,8 +8,7 @@
     "server": "nodemon index.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild":
-      "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "",
   "license": "ISC",
@@ -19,9 +18,11 @@
     "classnames": "^2.2.5",
     "concurrently": "^3.5.1",
     "cookie-session": "^2.0.0-beta.3",
+    "cors": "^2.8.4",
     "cross-env": "^5.1.4",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.0",
+    "moment": "^2.22.0",
     "mongoose": "^5.0.12",
     "nodemon": "^1.17.2",
     "npm": "^5.8.0",

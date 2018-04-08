@@ -48,7 +48,67 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => {
+const server = http.Server(app);
+const io = socketIO(server);
+
+server.listen(PORT, () => {
   console.log(`listening to port ${PORT}`);
   console.log('ENV:', process.env.NODE_ENV);
+});
+
+/////////////////////
+// SOCKET.IO SETUP //
+/////////////////////
+const moment = require('moment');
+const Rooms = require('./services/socketIO/room');
+const { generateMessage } = require('./services/socketIO/message');
+const rooms = new Rooms();
+const Room = mongoose.model('rooms');
+
+io.on('connection', socket => {
+  console.log('User connected:', socket.id);
+
+  socket.on('join', (name, room, callback) => {
+    const userCheck = rooms.getUserByName(name);
+    if (userCheck && userCheck.room.toLowerCase() === room) {
+      return callback('Username is already in use');
+    }
+
+    socket.join(room);
+
+    rooms.removeUser(socket.id);
+    rooms.addUser(socket.id, name, room);
+  });
+
+  socket.on('disconnect', () => {
+    rooms.removeUser(socket.id);
+  });
+
+  socket.on('createMessage', async (message, roomId, callback) => {
+    const user = rooms.getUser(socket.id);
+    console.log(roomId);
+    const roomData = await Room.findById(roomId);
+
+    if (roomData) {
+      const timestamp = moment().valueOf();
+
+      console.log(timestamp);
+
+      roomData.messages.push({
+        from: user.name,
+        text: message,
+        timestamp
+      });
+
+      roomData.save();
+
+      if (user) {
+        io
+          .to(user.room)
+          .emit('newMessage', generateMessage(user.name, message, timestamp));
+      }
+
+      callback();
+    }
+  });
 });

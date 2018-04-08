@@ -21,6 +21,7 @@ const roomSchema = new Schema({
     {
       text: String,
       fromId: ObjectId,
+      from: String,
       timestamp: Date
     }
   ]
