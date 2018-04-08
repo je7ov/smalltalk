@@ -39,7 +39,7 @@ li {
 }
 
 .chat-page {
-  width: 100vw;
+  width: inherit;
   height: 100vh;
   overflow: hidden;
   display: flex;
@@ -59,6 +59,36 @@ li {
   width: inherit;
   flex-basis: 80px;
   padding: 0 12px;
+}
+
+@media (min-width: 576px) {
+  .chat-messages {
+    overflow-y: hidden;
+  }
+
+  .chat-messages:hover {
+    overflow-y: auto;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
 }
 
 .message {

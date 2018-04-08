@@ -160,44 +160,65 @@ class ChatRoom extends Component {
     }
   }
 
+  _renderNew() {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col-12">New render</div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     return (
-      <div className="chat-page">
-        <div className="row chat-top">
-          <div className="col-2">
-            <button className="btn btn-primary" onClick={this._handleBack}>
-              &lt; Back
-            </button>
-          </div>
-          <div className="col-8">
-            <h1 className="text-center">{this.state.room.name}</h1>
-          </div>
-        </div>
-        <div className="chat-messages" ref={this.messageListRef}>
-          {this._renderMessages()}
-        </div>
-        <div className="chat-input-form">
-          <form>
-            <div className="form-group row" id="message-input">
-              <div className="col-lg-10 col-md-9 col-8">
-                <input
-                  type="text"
-                  className="form-control"
-                  value={this.state.input}
-                  onChange={this._handleInputChange}
-                />
-              </div>
-              <div className="col-lg-2 col-md-3 col-4">
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-block"
-                  onClick={this._handleSendMessage}
-                >
-                  SEND
-                </button>
-              </div>
+      <div className="container">
+        <div className="chat-page">
+          <div className="row chat-top">
+            <div className="col-1">
+              <button
+                className="btn btn-primary d-none d-md-block"
+                onClick={this._handleBack}
+              >
+                &lt; Back
+              </button>
+              <button
+                className="btn btn-primary d-block d-sm-none"
+                onClick={this._handleBack}
+              >
+                &lt;
+              </button>
             </div>
-          </form>
+            <div className="col-11">
+              <h1 className="text-center">{this.state.room.name}</h1>
+            </div>
+          </div>
+          <div className="chat-messages" ref={this.messageListRef}>
+            {this._renderMessages()}
+          </div>
+          <div className="chat-input-form">
+            <form>
+              <div className="form-group row" id="message-input">
+                <div className="col-lg-10 col-md-9 col-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={this.state.input}
+                    onChange={this._handleInputChange}
+                  />
+                </div>
+                <div className="col-lg-2 col-md-3 col-4">
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-block"
+                    onClick={this._handleSendMessage}
+                  >
+                    SEND
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     );

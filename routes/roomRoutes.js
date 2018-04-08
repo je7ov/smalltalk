@@ -132,7 +132,7 @@ module.exports = app => {
 
     const room = await Room.findById(id);
     if (!room) {
-      res
+      return res
         .status(400)
         .json({ success: false, message: 'Room not found' })
         .send();
