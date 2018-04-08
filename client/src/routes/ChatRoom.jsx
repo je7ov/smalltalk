@@ -22,7 +22,9 @@ class ChatRoom extends Component {
       firstLoad: true
     };
 
-    this.messageListRef = React.createRef();
+    this.setMessageListRef = element => {
+      this.messageList = element;
+    };
 
     this._handleBack = this._handleBack.bind(this);
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -36,8 +38,8 @@ class ChatRoom extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.state.socket && nextProps.auth && nextProps.auth.id) {
-      // const socket = io(window.location.origin);
-      const socket = io('http://localhost:5000');
+      const socket = io(window.location.origin);
+      // const socket = io('http://localhost:5000');
 
       /////////////////////
       // SOCKET.IO SETUP //
@@ -80,7 +82,8 @@ class ChatRoom extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextState.messages.length !== this.state.messages.length) {
-      const node = this.messageListRef.current;
+      console.log(this.messageList);
+      const node = this.messageList.current;
 
       if (node.clientHeight + node.scrollTop === node.scrollHeight) {
         this.setState({ stickyScroll: true });
@@ -90,7 +93,7 @@ class ChatRoom extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.stickyScroll || this.state.firstLoad) {
-      const node = this.messageListRef.current;
+      const node = this.messageList.current;
 
       node.scrollTop = node.scrollHeight - node.clientHeight;
       if (this.state.firstLoad) {
@@ -173,7 +176,7 @@ class ChatRoom extends Component {
             <h1 className="text-center">{this.state.room.name}</h1>
           </div>
         </div>
-        <div className="chat-messages" ref={this.messageListRef}>
+        <div className="chat-messages" ref={this.setMessageListRef}>
           {this._renderMessages()}
         </div>
         <div className="chat-input-form">
