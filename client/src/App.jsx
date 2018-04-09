@@ -9,6 +9,7 @@ import Auth from './modules/Auth';
 import SignupLogin from './routes/SignupLogin';
 import Dashboard from './routes/Dashboard';
 import ChatRoom from './routes/ChatRoom';
+import Invite from './routes/Invite';
 
 class App extends Component {
   render() {
@@ -28,6 +29,7 @@ class App extends Component {
         />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/room/:name" component={ChatRoom} />
+        <Route path="/invite/:link" component={Invite} />
       </div>
     );
   }
