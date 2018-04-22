@@ -10,7 +10,12 @@
       },
       "env_production": {
         "NODE_ENV": "production",
-        "PORT": 80
+        "PORT": 80,
+        "GOOGLE_CLIENT_ID": "749118234941-bkqb4kmnl6uabielrc7imspq5eb0b5s5.apps.googleusercontent.com",
+        "GOOGLE_CLIENT_SECRET": "ypd_16eh6lx1Jv9AZHg0CD30",
+        "MONGO_URI": "mongodb://localhost:27017/smalltalk-dev",
+        "COOKIE_KEY": "Tz2gBB6JrzT7M85JLYYLGF6hWut8FSsU",
+        "JWT_SECRET": "n8u7NRUTxxBtN44KHZLYrfu55NR6GNQT"
       }
     }
   ]

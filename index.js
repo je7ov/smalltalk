@@ -37,6 +37,7 @@ app.use('/api', authCheckMiddleware);
 
 require('./routes/authRoutes')(app);
 require('./routes/roomRoutes')(app);
+require('./routes/userRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));

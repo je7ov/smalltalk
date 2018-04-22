@@ -83,35 +83,35 @@ module.exports = app => {
     })(req, res, next);
   });
 
-  ///////////////////////////////
-  // GET CURRENT USER FROM JWT //
-  ///////////////////////////////
-  app.get('/api/current_user', async (req, res) => {
-    const token = req.headers.authorization.split(' ')[1];
-    const decoded = jwt.verify(token, keys.jwtSecret);
-    const userId = decoded.sub;
+  // ///////////////////////////////
+  // // GET CURRENT USER FROM JWT //
+  // ///////////////////////////////
+  // app.get('/api/current_user', async (req, res) => {
+  //   const token = req.headers.authorization.split(' ')[1];
+  //   const decoded = jwt.verify(token, keys.jwtSecret);
+  //   const userId = decoded.sub;
 
-    const userData = await User.findById(userId);
+  //   const userData = await User.findById(userId);
 
-    let user = null;
-    if (userData) {
-      const roomsOwned = [];
-      for (const roomId of userData.roomsOwned) {
-        const room = await Room.findById(roomId);
-        if (room) {
-          roomsOwned.push({ name: room.name, id: roomId });
-        }
-      }
+  //   let user = null;
+  //   if (userData) {
+  //     const roomsOwned = [];
+  //     for (const roomId of userData.roomsOwned) {
+  //       const room = await Room.findById(roomId);
+  //       if (room) {
+  //         roomsOwned.push({ name: room.name, id: roomId });
+  //       }
+  //     }
 
-      user = {
-        id: userData.id,
-        username: userData.username,
-        roomsOwned
-      };
-    }
+  //     user = {
+  //       id: userData.id,
+  //       username: userData.username,
+  //       roomsOwned
+  //     };
+  //   }
 
-    res.send(user);
-  });
+  //   res.send(user);
+  // });
 
   // logout user with passport
   app.get('/api/logout', (req, res) => {
