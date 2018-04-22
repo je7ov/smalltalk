@@ -9,7 +9,9 @@ import {
   ROOM,
   NEW_ROOM,
   DELETE_ROOM,
-  GET_MESSAGES
+  GET_MESSAGES,
+  GET_LINK,
+  ACCEPT_INVITE
 } from './types';
 
 export const fetchUser = () => async dispatch => {
@@ -115,4 +117,32 @@ export const getMessages = id => async dispatch => {
 
   dispatch({ type: GET_MESSAGES, payload: messages.data });
   dispatch(doneLoading(ROOM));
+};
+
+export const getInviteLink = id => async dispatch => {
+  const link = await axios.get(`/api/link/${id}`, {
+    headers: { Authorization: `Bearer ${Auth.getToken()}` }
+  });
+
+  dispatch({ type: GET_LINK, payload: link.data });
+};
+
+export const getRoomFromInvite = link => async dispatch => {
+  const room = await axios.get(`/api/invite/${link}`, {
+    headers: { Authorization: `Bearer ${Auth.getToken()}` }
+  });
+
+  dispatch({ type: NEW_ROOM, payload: room.data });
+};
+
+export const acceptInvite = link => async dispatch => {
+  const accept = await axios.post(
+    `/api/invite/${link}`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${Auth.getToken()}` }
+    }
+  );
+
+  dispatch({ type: ACCEPT_INVITE, payload: accept.data });
 };

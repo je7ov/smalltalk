@@ -24,7 +24,11 @@ const roomSchema = new Schema({
       from: String,
       timestamp: Date
     }
-  ]
+  ],
+  invite: {
+    type: String,
+    unique: true
+  }
 });
 
 mongoose.model('rooms', roomSchema);

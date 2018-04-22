@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faLink from '@fortawesome/fontawesome-free-solid/faLink';
+import ReactTooltip from 'react-tooltip';
+import copy from 'copy-to-clipboard';
 
 import SpinnerButton from '../components/SpinnerButton';
 import * as actions from '../actions';
@@ -10,13 +14,15 @@ class Dashboard extends Component {
     super(props);
 
     this.state = {
-      roomName: ''
+      roomName: '',
+      copyToClipboard: false
     };
 
     this._handleLogout = this._handleLogout.bind(this);
     this._handleRoomNameChange = this._handleRoomNameChange.bind(this);
     this._handleCreateRoom = this._handleCreateRoom.bind(this);
     this._handleDeleteRoom = this._handleDeleteRoom.bind(this);
+    this._handleGetLink = this._handleGetLink.bind(this);
     this._renderRoomList = this._renderRoomList.bind(this);
     this._renderCreateButton = this._renderCreateButton.bind(this);
     this._renderFriendsList = this._renderFriendsList.bind(this);
@@ -24,6 +30,15 @@ class Dashboard extends Component {
 
   componentWillMount() {
     this.props.fetchUser();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.copyToClipboard && nextProps.room && nextProps.room.link) {
+      if (copy(nextProps.room.link)) {
+        console.log(nextProps.room.link);
+        this.setState({ copyToClipboard: false });
+      }
+    }
   }
 
   async _handleLogout(event) {
@@ -52,8 +67,14 @@ class Dashboard extends Component {
     ) {
       // delete room here
       this.props.deleteRoom(room.id);
-      this.forceUpdate();
     }
+  }
+
+  _handleGetLink(event, roomId) {
+    event.preventDefault();
+
+    this.props.getInviteLink(roomId);
+    this.setState({ copyToClipboard: true });
   }
 
   _renderSampleText() {
@@ -96,10 +117,19 @@ class Dashboard extends Component {
                     {room.name}
                     <button
                       className="close"
+                      data-tip="Delete room"
                       onClick={event => this._handleDeleteRoom(event, room)}
                     >
                       &times;
                     </button>
+                    <button
+                      className="link-icon"
+                      data-tip="Copy Invite Link"
+                      onClick={event => this._handleGetLink(event, room.id)}
+                    >
+                      <FontAwesomeIcon icon={faLink} />
+                    </button>
+                    <ReactTooltip effect="solid" delayShow={400} />
                   </li>
                 </Link>
               );
