@@ -100,9 +100,10 @@ io.on('connection', socket => {
       roomData.save();
 
       if (user) {
-        io
-          .to(user.room)
-          .emit('newMessage', generateMessage(user.name, message, timestamp));
+        io.to(user.room).emit(
+          'newMessage',
+          generateMessage(user.name, message, timestamp)
+        );
       }
 
       callback();

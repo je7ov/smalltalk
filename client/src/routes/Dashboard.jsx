@@ -160,7 +160,6 @@ class Dashboard extends Component {
         return <p className="text-center">No friends :(</p>;
       }
 
-      console.log(this.props.auth.friends);
       return (
         <ul className="list-group">
           {this.props.auth.friends.map((friend, i) => {
@@ -176,8 +175,6 @@ class Dashboard extends Component {
   }
 
   render() {
-    if (this.props.auth) console.log('friends:', this.props.auth.friends);
-
     return (
       <div className="container" id="dashboard">
         <div className="row">
@@ -201,13 +198,13 @@ class Dashboard extends Component {
         <br />
 
         <div className="row">
-          <div className="col-3 offset-1">
+          <div className="col-sm-3 offset-1">
             <div className="row">
               <div className="col-12">
                 <h2 className="text-center">Friends</h2>
               </div>
               <div className="col-12">
-                <button className="btn btn-success btn-block">
+                <button className="btn btn-success btn-block" disabled>
                   Add Friend
                 </button>
                 <br />
@@ -218,7 +215,7 @@ class Dashboard extends Component {
             </div>
           </div>
 
-          <div className="col-9">
+          <div className="col-sm-8">
             <div className="row">
               <div className="col-sm-8 offset-sm-2">
                 <form>
@@ -256,4 +253,7 @@ function mapStateToProps({ auth, room, load }) {
   return { auth, room, load };
 }
 
-export default connect(mapStateToProps, actions)(Dashboard);
+export default connect(
+  mapStateToProps,
+  actions
+)(Dashboard);

@@ -229,4 +229,7 @@ function mapStateToProps({ auth, room }) {
   return { auth, room };
 }
 
-export default connect(mapStateToProps, actions)(ChatRoom);
+export default connect(
+  mapStateToProps,
+  actions
+)(ChatRoom);
